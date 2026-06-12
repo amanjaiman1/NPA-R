@@ -57,6 +57,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="absolute bottom-4 left-[-4rem] h-72 w-72 animate-bloom-float rounded-full bg-bloom-mint/20 blur-[90px] [animation-delay:-6s]" />
         <div className="absolute left-1/3 top-1/3 h-64 w-64 animate-bloom-drift rounded-full bg-bloom-marigold/15 blur-[100px] [animation-delay:-12s]" />
         <div className="absolute right-1/3 top-2/3 h-60 w-60 animate-bloom-float-2 rounded-full bg-bloom-peach/20 blur-[90px] [animation-delay:-9s]" />
+        {/* Dark mode: a 90% ink scrim keeps the canvas dominant, leaving the blooms as a subtle wash. */}
+        <div className="bloom-scrim absolute inset-0" />
       </div>
 
       {/* Desktop sidebar */}

@@ -62,6 +62,15 @@
   border-color: rgb(var(--paper) / 0.1);
 }
 
+/* Dark mode: hold the background at 90% opacity so the floral field reads as
+   a quiet wash rather than competing with content. Light mode keeps it clear. */
+.bloom-scrim {
+  background-color: rgb(var(--ink) / 0.9);
+}
+[data-theme="light"] .bloom-scrim {
+  background-color: transparent;
+}
+
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
