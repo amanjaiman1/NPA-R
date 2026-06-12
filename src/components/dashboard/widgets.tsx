@@ -87,6 +87,12 @@ export function GreetingHero() {
           <p className="mt-3 max-w-md text-sm italic leading-relaxed text-paper/45">
             “{quote}”
           </p>
+          {profile.mission && (
+            <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-paper/10 bg-paper/[0.03] px-3 py-1 text-xs text-paper/60">
+              <Target className="h-3.5 w-3.5" />
+              <span className="text-paper/45">Mission</span> {profile.mission}
+            </p>
+          )}
           <div className="mt-5 flex flex-wrap items-center gap-2">
             <Link
               href="/journal?new=1"

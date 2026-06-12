@@ -143,17 +143,43 @@ export type MockType =
   | "Mains Optional"
   | "Sectional";
 
+export type MockCategory = "Prelims" | "Mains" | "Sectional";
+
+/**
+ * Per-section / per-subject breakdown of a mock. For prelims this captures
+ * questions/attempts/accuracy; for mains it captures score/max as answer
+ * quality. `timeSpent` (minutes) powers the time-allocation analysis.
+ */
+export interface MockSection {
+  name: string; // subject ("Polity") or paper ("GS Paper II") or area ("Quant")
+  questions?: number; // total questions in the section (prelims)
+  attempted: number;
+  correct: number;
+  wrong: number;
+  score: number; // net marks for this section
+  max: number; // maximum marks for this section
+  timeSpent?: number; // minutes spent
+}
+
 export interface MockTest {
   id: string;
   date: ISODate;
   name: string;
   type: MockType;
+  category?: MockCategory;
   provider?: string;
   score: number;
   max: number;
   attempted?: number;
   correct?: number;
   wrong?: number;
+  unattempted?: number;
+  negative?: number; // marks lost to negative marking
+  markPerQ?: number; // marks per correct answer
+  negPerWrong?: number; // penalty per wrong answer
+  durationMin?: number; // allotted time
+  timeTakenMin?: number; // time actually used
+  sections?: MockSection[];
   notes?: string;
   weakAreas?: string[];
 }
@@ -396,6 +422,7 @@ export interface SelectionStage {
 export interface Profile {
   name: string;
   tagline?: string;
+  mission?: string;
   targetExam: string;
   examDate: ISODate;
   attemptNumber: number;

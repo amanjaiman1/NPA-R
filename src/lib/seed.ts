@@ -19,7 +19,7 @@ import type {
   Topic,
   TopicStatus,
   CACategory,
-  MockType,
+  MockSection,
   Attachment,
 } from "./types";
 
@@ -110,7 +110,7 @@ const subjectDefs: {
   { id: "ethics", name: "Ethics (GS4)", paper: "GS4", weightage: 68, base: 0.58, topics: ["Ethics & Human Interface", "Attitude", "Foundational Values", "Emotional Intelligence", "Thinkers", "Public Service Values", "Probity", "Case Studies"] },
   { id: "essay", name: "Essay", paper: "Essay", weightage: 60, base: 0.5, topics: ["Philosophical", "Polity-based", "Economy-based", "Social", "Quote-based", "Structure Practice"] },
   { id: "csat", name: "CSAT", paper: "CSAT", weightage: 50, base: 0.62, topics: ["Comprehension", "Quantitative Aptitude", "Logical Reasoning", "Data Interpretation", "Decision Making"] },
-  { id: "psir", name: "PSIR Optional", paper: "Optional", weightage: 88, base: 0.64, topics: ["Political Theory", "Indian Govt & Politics", "Comparative Politics", "IR Theories", "India & World", "Western Thinkers", "Indian Thinkers"] },
+  { id: "sociology", name: "Sociology (Optional)", paper: "Optional", weightage: 88, base: 0.42, topics: ["Sociological Thinkers", "Social Stratification", "Social Movements", "Sociology of Development", "Indian Society & Change", "Caste & Class", "Research Methods"] },
   { id: "current-affairs", name: "Current Affairs", paper: "CurrentAffairs", weightage: 96, base: 0.7, topics: ["Daily News", "Editorials", "PIB & PRS", "Govt Schemes", "Reports & Indices", "Yojana & Kurukshetra"] },
 ];
 
@@ -358,32 +358,220 @@ function buildJournal(subjects: Subject[]): JournalEntry[] {
 
 /* ── Mock tests with an improving trend ──────────────────────── */
 
+/* ── Mock tests: rich section/subject/time/negative data ─────── */
+
 function buildMocks(): MockTest[] {
   const mocks: MockTest[] = [];
-  const types: MockType[] = ["Prelims GS", "Prelims CSAT", "Sectional", "Mains GS"];
-  const providers = ["Vision IAS", "Insights", "ForumIAS", "Self-Eval"];
-  const weakAreas = ["Modern History", "Environment", "Economy", "Polity", "Map-based", "Assertion-Reason"];
-  for (let w = 24; w >= 0; w--) {
+  const providers = ["Vision IAS", "Insights", "ForumIAS", "GS Score", "Self-Eval"];
+  const clamp01 = (n: number) => Math.max(0.05, Math.min(0.97, n));
+
+  // Prelims GS subject mix (questions ~ 100). Base accuracy varies by subject
+  // so strong/weak areas emerge; a recent storyline makes Economy dip and
+  // Environment surge so the engine has a clear "why" to detect.
+  const gsSubs = [
+    { name: "Polity", base: 0.74, q: 18 },
+    { name: "Modern History", base: 0.6, q: 15 },
+    { name: "Geography", base: 0.66, q: 14 },
+    { name: "Economy", base: 0.56, q: 15 },
+    { name: "Environment", base: 0.62, q: 14 },
+    { name: "Science & Tech", base: 0.5, q: 10 },
+    { name: "Current Affairs", base: 0.68, q: 14 },
+  ];
+  const csatSubs = [
+    { name: "Comprehension", base: 0.72, q: 27 },
+    { name: "Quantitative", base: 0.55, q: 18 },
+    { name: "Reasoning", base: 0.63, q: 17 },
+    { name: "Data Interpretation", base: 0.58, q: 10 },
+    { name: "Decision Making", base: 0.82, q: 8 },
+  ];
+  const mainsPapers: { key: string; subs: string[] }[] = [
+    { key: "GS Paper I", subs: ["History", "Art & Culture", "Geography", "Society"] },
+    { key: "GS Paper II", subs: ["Polity", "Governance", "IR", "Social Justice"] },
+    { key: "GS Paper III", subs: ["Economy", "Environment", "Sci & Tech", "Internal Security", "Disaster Mgmt"] },
+    { key: "GS Paper IV", subs: ["Ethics Theory", "Case Studies"] },
+  ];
+
+  let gsN = 0;
+  let csatN = 0;
+  let mainsN = 0;
+  let secN = 0;
+
+  for (let w = 30; w >= 0; w--) {
     const date = agoISO(w * 7 + randInt(0, 3));
-    const type = pick(types);
-    const trend = (24 - w) / 24; // improves over time
-    if (type === "Prelims GS") {
-      const max = 200;
-      const score = Math.round((78 + trend * 42 + (rand() - 0.5) * 18) * 1) ;
-      const correct = Math.round(score / 2 / 1.5);
-      mocks.push({ id: `m-${date}-${w}`, date, name: `Prelims FLT #${25 - w}`, type, provider: pick(providers), score, max, attempted: randInt(85, 98), correct, wrong: randInt(20, 40), notes: undefined, weakAreas: chance(0.6) ? [pick(weakAreas), pick(weakAreas)] : undefined });
-    } else if (type === "Prelims CSAT") {
-      const max = 200;
-      const score = Math.round(120 + trend * 50 + (rand() - 0.5) * 20);
-      mocks.push({ id: `m-${date}-${w}`, date, name: `CSAT Practice #${25 - w}`, type, provider: pick(providers), score, max, attempted: randInt(60, 80), correct: randInt(45, 70), wrong: randInt(8, 20) });
-    } else if (type === "Sectional") {
-      const max = 50;
-      const score = Math.round(24 + trend * 18 + (rand() - 0.5) * 8);
-      mocks.push({ id: `m-${date}-${w}`, date, name: `${pick(weakAreas)} Sectional`, type, provider: pick(providers), score, max, attempted: randInt(20, 25), correct: randInt(14, 24), wrong: randInt(2, 9) });
+    const t = (30 - w) / 30; // improvement over time
+    const recent = w <= 3;
+    const roll = rand();
+
+    if (roll < 0.5) {
+      // ── Prelims GS ──
+      gsN++;
+      const mark = 2;
+      const neg = 0.66;
+      const sections: MockSection[] = gsSubs.map((s) => {
+        let acc = s.base + t * 0.12 + (rand() - 0.5) * 0.12;
+        if (recent && s.name === "Economy") acc -= 0.15;
+        if (recent && s.name === "Environment") acc += 0.13;
+        acc = clamp01(acc);
+        const attempted = Math.min(
+          s.q,
+          Math.round(s.q * clamp01(0.78 + t * 0.16 + (rand() - 0.5) * 0.12)),
+        );
+        const correct = Math.round(attempted * acc);
+        const wrong = attempted - correct;
+        const score = r1(correct * mark - wrong * neg);
+        const timeSpent = Math.round(
+          (s.q / 100) * 120 * (0.9 + (1 - acc) * 0.45),
+        );
+        return { name: s.name, questions: s.q, attempted, correct, wrong, score, max: s.q * mark, timeSpent };
+      });
+      const sum2 = <K extends keyof MockSection>(k: K) =>
+        sections.reduce((a, x) => a + (Number(x[k]) || 0), 0);
+      const correct = sum2("correct");
+      const wrong = sum2("wrong");
+      const attempted = sum2("attempted");
+      const score = r1(sum2("score"));
+      const timeTaken = sum2("timeSpent");
+      const weak = [...sections]
+        .sort((a, b) => a.correct / Math.max(1, a.attempted) - b.correct / Math.max(1, b.attempted))
+        .slice(0, 2)
+        .map((s) => s.name);
+      mocks.push({
+        id: `m-${date}-${w}`,
+        date,
+        name: `Prelims GS FLT #${gsN}`,
+        type: "Prelims GS",
+        category: "Prelims",
+        provider: pick(providers),
+        score,
+        max: 200,
+        attempted,
+        correct,
+        wrong,
+        unattempted: 100 - attempted,
+        negative: r1(wrong * neg),
+        markPerQ: mark,
+        negPerWrong: neg,
+        durationMin: 120,
+        timeTakenMin: timeTaken,
+        sections,
+        weakAreas: weak,
+      });
+    } else if (roll < 0.68) {
+      // ── Prelims CSAT ──
+      csatN++;
+      const mark = 2.5;
+      const neg = 0.83;
+      const sections: MockSection[] = csatSubs.map((s) => {
+        const acc = clamp01(s.base + t * 0.1 + (rand() - 0.5) * 0.12);
+        const attempted = Math.min(
+          s.q,
+          Math.round(s.q * clamp01(0.8 + t * 0.12 + (rand() - 0.5) * 0.1)),
+        );
+        const correct = Math.round(attempted * acc);
+        const wrong = attempted - correct;
+        return {
+          name: s.name,
+          questions: s.q,
+          attempted,
+          correct,
+          wrong,
+          score: r1(correct * mark - wrong * neg),
+          max: s.q * mark,
+          timeSpent: Math.round((s.q / 80) * 120 * (0.9 + (1 - acc) * 0.4)),
+        };
+      });
+      const correct = sections.reduce((a, x) => a + x.correct, 0);
+      const wrong = sections.reduce((a, x) => a + x.wrong, 0);
+      const attempted = sections.reduce((a, x) => a + x.attempted, 0);
+      const score = r1(sections.reduce((a, x) => a + x.score, 0));
+      mocks.push({
+        id: `m-${date}-${w}`,
+        date,
+        name: `CSAT Practice #${csatN}`,
+        type: "Prelims CSAT",
+        category: "Prelims",
+        provider: pick(providers),
+        score,
+        max: 200,
+        attempted,
+        correct,
+        wrong,
+        unattempted: 80 - attempted,
+        negative: r1(wrong * neg),
+        markPerQ: mark,
+        negPerWrong: neg,
+        durationMin: 120,
+        timeTakenMin: sections.reduce((a, x) => a + (x.timeSpent ?? 0), 0),
+        sections,
+      });
+    } else if (roll < 0.85) {
+      // ── Mains GS ──
+      mainsN++;
+      const paper = mainsPapers[mainsN % mainsPapers.length];
+      const perMax = Math.round(250 / paper.subs.length);
+      const sections: MockSection[] = paper.subs.map((name) => {
+        const quality = clamp01(0.42 + t * 0.13 + (rand() - 0.5) * 0.1 + (recent ? 0.03 : 0));
+        return {
+          name,
+          attempted: 0,
+          correct: 0,
+          wrong: 0,
+          score: Math.round(perMax * quality),
+          max: perMax,
+          timeSpent: Math.round((180 / paper.subs.length) * (0.85 + rand() * 0.4)),
+        };
+      });
+      const score = sections.reduce((a, x) => a + x.score, 0);
+      const max = sections.reduce((a, x) => a + x.max, 0);
+      mocks.push({
+        id: `m-${date}-${w}`,
+        date,
+        name: `Mains ${paper.key} Test`,
+        type: "Mains GS",
+        category: "Mains",
+        provider: pick(providers),
+        score,
+        max,
+        durationMin: 180,
+        timeTakenMin: sections.reduce((a, x) => a + (x.timeSpent ?? 0), 0),
+        sections,
+        notes: "Evaluated — structure improving; conclusions need work.",
+      });
     } else {
-      const max = 250;
-      const score = Math.round(95 + trend * 45 + (rand() - 0.5) * 20);
-      mocks.push({ id: `m-${date}-${w}`, date, name: `Mains GS-${randInt(1, 4)} Test`, type, provider: pick(providers), score, max, notes: "Evaluated; intro-conclusion need work." });
+      // ── Sectional (single subject) ──
+      secN++;
+      const s = pick(gsSubs);
+      const mark = 2;
+      const neg = 0.66;
+      const q = 25;
+      const acc = clamp01(s.base + t * 0.12 + (rand() - 0.5) * 0.14);
+      const attempted = Math.round(q * clamp01(0.82 + t * 0.12));
+      const correct = Math.round(attempted * acc);
+      const wrong = attempted - correct;
+      const score = r1(correct * mark - wrong * neg);
+      mocks.push({
+        id: `m-${date}-${w}`,
+        date,
+        name: `${s.name} Sectional #${secN}`,
+        type: "Sectional",
+        category: "Sectional",
+        provider: pick(providers),
+        score,
+        max: q * mark,
+        attempted,
+        correct,
+        wrong,
+        unattempted: q - attempted,
+        negative: r1(wrong * neg),
+        markPerQ: mark,
+        negPerWrong: neg,
+        durationMin: 30,
+        timeTakenMin: randInt(22, 32),
+        sections: [
+          { name: s.name, questions: q, attempted, correct, wrong, score, max: q * mark, timeSpent: randInt(22, 32) },
+        ],
+        weakAreas: acc < 0.6 ? [s.name] : undefined,
+      });
     }
   }
   return mocks;
@@ -400,7 +588,7 @@ function buildRevisions(): RevisionItem[] {
     { subjectId: "ir", topic: "India's Neighbourhood First Policy" },
     { subjectId: "art-culture", topic: "Temple Architecture Styles" },
     { subjectId: "sci-tech", topic: "Recent Space Missions" },
-    { subjectId: "psir", topic: "Western Political Thinkers" },
+    { subjectId: "sociology", topic: "Sociological Thinkers (Weber, Durkheim)" },
     { subjectId: "economy", topic: "External Sector & BoP" },
     { subjectId: "polity", topic: "Constitutional Bodies" },
   ];
@@ -544,7 +732,7 @@ function buildGoals(): Goal[] {
     { id: "g2", title: "Score 120+ in next Prelims FLT", horizon: "Monthly", metricLabel: "Score", target: 120, current: 112, unit: "marks", deadline: aheadISO(20), status: "Active", createdOn: agoISO(25) },
     { id: "g3", title: "Write 2 essays every week", horizon: "Weekly", metricLabel: "Essays", target: 2, current: 1, unit: "essays", deadline: aheadISO(4), status: "Active", createdOn: agoISO(7), linkedSubjectId: "essay" },
     { id: "g4", title: "Daily 9 hours of focused study", horizon: "Daily", metricLabel: "Hours", target: 9, current: 8, unit: "hrs", status: "Active", createdOn: agoISO(2) },
-    { id: "g5", title: "Complete PSIR Paper 1 notes", horizon: "Monthly", metricLabel: "Sections", target: 7, current: 7, unit: "sections", deadline: agoISO(8), status: "Completed", createdOn: agoISO(45), linkedSubjectId: "psir" },
+    { id: "g5", title: "Complete Sociology optional lectures", horizon: "Quarterly", metricLabel: "Lectures", target: 130, current: 15, unit: "lectures", deadline: aheadISO(120), status: "Active", createdOn: agoISO(30), linkedSubjectId: "sociology" },
     { id: "g6", title: "Build a current-affairs revision system", horizon: "Quarterly", metricLabel: "Monthly compilations", target: 3, current: 2, unit: "months", deadline: aheadISO(40), status: "Active", createdOn: agoISO(50) },
     { id: "g7", title: "Reach final selection — CSE 2027", horizon: "Long-term", metricLabel: "Journey", deadline: aheadISO(345), status: "Active", createdOn: agoISO(560) },
     { id: "g8", title: "Maintain a 30-day study streak", horizon: "Monthly", metricLabel: "Days", target: 30, current: 18, unit: "days", deadline: aheadISO(12), status: "Active", createdOn: agoISO(18) },
@@ -561,7 +749,7 @@ function buildBooks(): Book[] {
     { title: "Ethics, Integrity & Aptitude", author: "Lexicon", subjectId: "ethics", paper: "GS4", totalPages: 520, isStandard: true, rating: 3, startedOn: agoISO(120) },
     { title: "Introduction to the Constitution", author: "D.D. Basu", subjectId: "polity", paper: "GS2", totalPages: 480, isStandard: true, rating: 4 },
     { title: "Contemporary Essays", author: "Ramesh Singh", subjectId: "essay", paper: "Essay", totalPages: 320, rating: 3, startedOn: agoISO(60) },
-    { title: "An Introduction to Political Theory", author: "O.P. Gauba", subjectId: "psir", paper: "Optional", totalPages: 540, isStandard: true, rating: 4, startedOn: agoISO(200) },
+    { title: "Sociology: Themes and Perspectives", author: "Haralambos & Holborn", subjectId: "sociology", paper: "Optional", totalPages: 540, isStandard: true, rating: 4, startedOn: agoISO(40) },
     { title: "India After Gandhi", author: "Ramachandra Guha", subjectId: "modern-history", paper: "GS1", totalPages: 890, rating: 5, startedOn: agoISO(150) },
   ];
   return defs.map((b, i) => {
@@ -582,7 +770,7 @@ function buildMilestones(): Milestone[] {
   return [
     { id: "ms1", date: agoISO(560), title: "Began the journey", type: "Start", description: "Quit the comfort of routine, committed to civil services. Day Zero.", pinned: true },
     { id: "ms2", date: agoISO(500), title: "Finished NCERTs (6-12)", type: "Phase", description: "Built the foundation across History, Geography, Polity and Economy." },
-    { id: "ms3", date: agoISO(430), title: "Chose PSIR as optional", type: "Achievement", description: "After much deliberation, locked Political Science & IR." },
+    { id: "ms3", date: agoISO(430), title: "Chose Sociology as optional", type: "Achievement", description: "After much deliberation, locked Sociology — understanding society is the heart of policing and public service." },
     { id: "ms4", date: agoISO(360), title: "First full-length mock", type: "Exam", description: "Scored 78/200. Humbling, but a baseline to beat." },
     { id: "ms5", date: agoISO(300), title: "Prelims 2025 — not cleared", type: "Setback", description: "Missed the cutoff by 4 marks. Regrouped after a week off." },
     { id: "ms6", date: agoISO(210), title: "Crossed 100 in mocks", type: "Achievement", description: "Consistency in revision started showing on the scoreboard." },
@@ -622,7 +810,7 @@ function buildReviews(): Review[] {
   return [
     { id: "rv-w1", type: "Weekly", periodLabel: "This week", startDate: agoISO(6), endDate: agoISO(0), totalHours: 54, mocksTaken: 1, rating: 4, wins: ["Crossed 50 study hours", "Finished Economy external sector"], struggles: ["Sleep slipped past midnight twice"], lessons: ["Front-load the hardest subject"], nextFocus: ["Environment revision", "2 essays"] },
     { id: "rv-w2", type: "Weekly", periodLabel: "Last week", startDate: agoISO(13), endDate: agoISO(7), totalHours: 48, mocksTaken: 2, rating: 3, wins: ["Two sectionals attempted"], struggles: ["Current affairs backlog grew"], lessons: ["A daily 30-min CA slot is non-negotiable"], nextFocus: ["Clear CA backlog"] },
-    { id: "rv-m1", type: "Monthly", periodLabel: "This month", startDate: agoISO(29), endDate: agoISO(0), totalHours: 212, mocksTaken: 5, rating: 4, wins: ["Best mock score yet (138)", "Completed PSIR Paper 1 notes"], struggles: ["Health dipped mid-month"], lessons: ["Protect the morning block"], nextFocus: ["Start Mains answer writing cycle 2"] },
+    { id: "rv-m1", type: "Monthly", periodLabel: "This month", startDate: agoISO(29), endDate: agoISO(0), totalHours: 212, mocksTaken: 5, rating: 4, wins: ["Best mock score yet (138)", "Reached Sociology lecture 15"], struggles: ["Health dipped mid-month"], lessons: ["Protect the morning block"], nextFocus: ["Start Mains answer writing cycle 2"] },
     { id: "rv-y1", type: "Yearly", periodLabel: "Past 12 months", startDate: agoISO(364), endDate: agoISO(0), totalHours: 2480, mocksTaken: 25, rating: 4, wins: ["Built an unshakeable daily system", "Optional notes complete", "Mock average up 60%"], struggles: ["One failed prelims attempt", "Burnout in month 7"], lessons: ["Rest is part of the plan", "Revision > new material"], nextFocus: ["Peak for CSE 2027", "Mains-first strategy"] },
   ];
 }
@@ -659,14 +847,14 @@ function buildTopicLinks(): TopicLink[] {
     ["modern-history", "Gandhian Era", "modern-history", "Revolutionaries", "contrast"],
     ["modern-history", "Gandhian Era", "modern-history", "Partition & Freedom", "leads to"],
     ["modern-history", "Partition & Freedom", "modern-history", "Post-Independence", "leads to"],
-    // ── History ↔ Polity ↔ PSIR ──
+    // ── History ↔ Polity ↔ Sociology (optional) ──
     ["modern-history", "Post-Independence", "polity", "Constitutional Framework", "prerequisite"],
-    ["polity", "Constitutional Framework", "psir", "Indian Govt & Politics", "related"],
-    ["psir", "Indian Govt & Politics", "polity", "Parliament", "related"],
-    ["psir", "Political Theory", "ethics", "Thinkers", "related"],
-    ["psir", "Western Thinkers", "ethics", "Thinkers", "related"],
-    ["psir", "IR Theories", "ir", "Global Institutions", "related"],
-    ["psir", "India & World", "ir", "India & Neighbours", "related"],
+    ["polity", "Constitutional Framework", "sociology", "Indian Society & Change", "related"],
+    ["sociology", "Indian Society & Change", "society", "Salient Features", "related"],
+    ["sociology", "Sociological Thinkers", "ethics", "Thinkers", "related"],
+    ["sociology", "Caste & Class", "society", "Communalism", "related"],
+    ["sociology", "Social Movements", "modern-history", "INC & Moderates", "related"],
+    ["sociology", "Sociology of Development", "social-justice", "Welfare Schemes", "related"],
     // ── International Relations ──
     ["ir", "Groupings", "ir", "Global Institutions", "related"],
     ["ir", "India-China", "ir", "India & Neighbours", "related"],
@@ -759,12 +947,13 @@ export function createSeedData(): ChronicleData {
   const subjects = buildSubjects();
   return {
     profile: {
-      name: "Aarav Sharma",
-      tagline: "Attempt II · The arena, not the stands.",
+      name: "Aman Jaiman",
+      tagline: "Do or die · CSE 2027.",
+      mission: "National Police Academy — IPS",
       targetExam: "UPSC CSE 2027",
       examDate: aheadISO(345),
       attemptNumber: 2,
-      optionalSubject: "Political Science & IR",
+      optionalSubject: "Sociology",
       startDate: agoISO(560),
       dailyHourTarget: 9,
     },

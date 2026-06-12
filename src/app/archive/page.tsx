@@ -63,6 +63,12 @@ export default function ArchivePage() {
             “Every setback was tuition. Every cleared stage, a door. {profile.name.split(" ")[0]} is
             writing a story that ends in three letters after a name.”
           </p>
+          {profile.mission && (
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-paper/12 bg-paper/[0.03] px-3.5 py-1.5 text-sm text-paper/70">
+              <Trophy className="h-3.5 w-3.5 text-paper/50" />
+              <span className="text-paper/45">Mission</span> {profile.mission}
+            </div>
+          )}
           <div className="mt-6 flex flex-wrap gap-6">
             <div>
               <p className="tabular text-2xl font-semibold text-paper">
