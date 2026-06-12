@@ -21,6 +21,8 @@ import type {
   CACategory,
   MockSection,
   Attachment,
+  LifeEntry,
+  ExerciseType,
 } from "./types";
 
 /* Deterministic RNG so seed data is stable across reloads. */
@@ -771,6 +773,83 @@ function buildExercise(): ExerciseLog[] {
   return logs;
 }
 
+function buildLifeLog(journal: JournalEntry[]): LifeEntry[] {
+  const jmap = new Map(journal.map((j) => [j.date, j]));
+  const out: LifeEntry[] = [];
+  const days = 90;
+  const exTypes: ExerciseType[] = ["Walk", "Yoga", "Gym", "Cycling"];
+  const beds = ["22:50", "23:10", "23:35", "00:05", "00:30"];
+  const wakes = ["05:20", "05:35", "05:55", "06:15", "06:40"];
+  let weight = 74.5; // trends down with consistency over the window
+
+  for (let i = days; i >= 0; i--) {
+    const date = agoISO(i);
+    const j = jmap.get(date);
+    const studyHours = j?.totalHours ?? 0;
+    const mood = j?.mood ?? 3;
+    const focus = j?.focus ?? 3;
+    const progress = (days - i) / days; // 0 -> 1 (fitness habits improve)
+
+    // Sleep correlates with mood/energy (well-rested → better day) + noise.
+    const sleepHours = r1(
+      Math.max(4.8, Math.min(8.9, 6.5 + (mood - 3) * 0.45 + (rand() - 0.5) * 1.1)),
+    );
+    const sleepQuality = Math.max(
+      1,
+      Math.min(5, Math.round((sleepHours / 8) * 5 + (rand() - 0.5))),
+    );
+
+    // Deep work tracks study hours & focus closely.
+    const deepWorkHours = r1(
+      Math.max(
+        0,
+        Math.min(studyHours, studyHours * (0.45 + focus * 0.06) + (rand() - 0.5) * 0.8),
+      ),
+    );
+
+    // Movement: consistency rises over time.
+    const didExercise = chance(0.38 + progress * 0.38);
+    const exerciseMinutes = didExercise ? randInt(20, 70) : 0;
+    const runKm = didExercise && chance(0.45) ? r1(2 + progress * 4 + rand() * 2) : 0;
+    const walkKm = r1(1 + progress * 2 + rand() * 2.5);
+    const exerciseType: ExerciseType | undefined = didExercise
+      ? runKm > 0
+        ? "Run"
+        : pick(exTypes)
+      : undefined;
+
+    // Hydration & meditation: improving habits.
+    const waterLiters = r1(Math.max(1, Math.min(4, 2 + progress * 0.8 + (rand() - 0.5))));
+    const meditationMin = chance(0.45 + progress * 0.25) ? randInt(5, 20) : 0;
+
+    // Screen time is inversely related to study hours.
+    const screenTimeMin = Math.round(
+      Math.max(20, Math.min(280, 205 - studyHours * 9 + (rand() - 0.5) * 55)),
+    );
+
+    weight = r1(weight - 0.028 - (didExercise ? 0.02 : 0) + (rand() - 0.5) * 0.16);
+
+    out.push({
+      id: `life-${date}`,
+      date,
+      sleepHours,
+      sleepQuality,
+      bedtime: pick(beds),
+      wakeTime: pick(wakes),
+      walkKm,
+      runKm,
+      exerciseMinutes,
+      exerciseType,
+      waterLiters,
+      meditationMin,
+      weightKg: weight,
+      screenTimeMin,
+      deepWorkHours,
+    });
+  }
+  return out;
+}
+
 function buildGoals(): Goal[] {
   return [
     { id: "g1", title: "Finish Polity full syllabus + 3 revisions", horizon: "Quarterly", metricLabel: "Topics revised", target: 9, current: 7, unit: "topics", deadline: aheadISO(70), status: "Active", createdOn: agoISO(60), linkedSubjectId: "polity" },
@@ -990,6 +1069,7 @@ function buildSelection(): SelectionStage[] {
 
 export function createSeedData(): ChronicleData {
   const subjects = buildSubjects();
+  const journal = buildJournal(subjects);
   return {
     profile: {
       name: "Aman Jaiman",
@@ -1003,7 +1083,7 @@ export function createSeedData(): ChronicleData {
       dailyHourTarget: 9,
     },
     subjects,
-    journal: buildJournal(subjects),
+    journal,
     mocks: buildMocks(),
     revisions: buildRevisions(),
     currentAffairs: buildCurrentAffairs(),
@@ -1011,6 +1091,7 @@ export function createSeedData(): ChronicleData {
     habits: buildHabits(),
     sleep: buildSleep(),
     exercise: buildExercise(),
+    lifeLog: buildLifeLog(journal),
     goals: buildGoals(),
     books: buildBooks(),
     milestones: buildMilestones(),

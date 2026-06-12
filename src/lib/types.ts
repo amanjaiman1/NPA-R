@@ -302,6 +302,28 @@ export interface ExerciseLog {
   note?: string;
 }
 
+/* ── Life Dashboard (unified daily life log) ─────────────────── */
+
+/** One record per day capturing every lifestyle metric, so daily/weekly
+ *  analytics and cross-metric correlations all read from one place. */
+export interface LifeEntry {
+  id: string;
+  date: ISODate; // unique per day
+  sleepHours: number;
+  sleepQuality: number; // 1-5
+  bedtime?: string;
+  wakeTime?: string;
+  walkKm: number;
+  runKm: number;
+  exerciseMinutes: number;
+  exerciseType?: ExerciseType;
+  waterLiters: number;
+  meditationMin: number;
+  weightKg?: number;
+  screenTimeMin: number;
+  deepWorkHours: number;
+}
+
 /* ── Goals ───────────────────────────────────────────────────── */
 
 export type GoalHorizon =
@@ -458,6 +480,7 @@ export interface ChronicleData {
   habits: Habit[];
   sleep: SleepLog[];
   exercise: ExerciseLog[];
+  lifeLog: LifeEntry[];
   goals: Goal[];
   books: Book[];
   milestones: Milestone[];

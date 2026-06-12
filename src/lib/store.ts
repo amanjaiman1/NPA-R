@@ -23,6 +23,7 @@ import type {
   TopicStatus,
   TopicLink,
   Habit,
+  LifeEntry,
 } from "./types";
 
 interface ChronicleState extends ChronicleData {
@@ -89,6 +90,9 @@ interface ChronicleState extends ChronicleData {
   /* habits */
   toggleHabit: (habitId: string, date: string) => void;
   addHabit: (name: string) => void;
+
+  /* life dashboard */
+  upsertLifeEntry: (entry: LifeEntry) => void;
 }
 
 const SR_INTERVALS = [1, 3, 7, 14, 30, 60];
@@ -414,10 +418,20 @@ export const useChronicle = create<ChronicleState>()(
             } as Habit,
           ],
         })),
+
+      upsertLifeEntry: (entry) =>
+        set((s) => {
+          const idx = s.lifeLog.findIndex((l) => l.date === entry.date);
+          const lifeLog = [...s.lifeLog];
+          if (idx >= 0) lifeLog[idx] = entry;
+          else lifeLog.push(entry);
+          lifeLog.sort((a, b) => a.date.localeCompare(b.date));
+          return { lifeLog };
+        }),
     }),
     {
       name: "upsc-chronicle-store",
-      version: 4,
+      version: 5,
       storage: createJSONStorage(() => localStorage),
       migrate: (persisted, version) => {
         const state = persisted as Partial<ChronicleState> | undefined;
@@ -491,6 +505,10 @@ export const useChronicle = create<ChronicleState>()(
               intervalDays: m.intervalDays ?? 1,
             } as Mistake;
           });
+        }
+        // v4 -> v5: introduce the unified Life Dashboard daily log.
+        if (state && version < 5 && !Array.isArray(state.lifeLog)) {
+          state.lifeLog = createSeedData().lifeLog;
         }
         return state as ChronicleState;
       },

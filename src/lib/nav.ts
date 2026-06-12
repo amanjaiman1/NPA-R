@@ -16,6 +16,7 @@ import {
   BookOpen,
   Sparkles,
   Trophy,
+  HeartPulse,
   type LucideIcon,
 } from "lucide-react";
 
@@ -68,7 +69,7 @@ export const navGroups: NavGroup[] = [
     label: "Life & Discipline",
     items: [
       { label: "Habits", href: "/habits", icon: ListChecks, short: "Daily disciplines" },
-      { label: "Wellbeing", href: "/wellbeing", icon: Flame, short: "Sleep & exercise" },
+      { label: "Life Dashboard", href: "/wellbeing", icon: HeartPulse, short: "Sleep, movement, focus & correlations" },
       { label: "Goals", href: "/goals", icon: Target, short: "What you're chasing" },
       { label: "Library", href: "/books", icon: BookOpen, short: "Book progress" },
     ],
