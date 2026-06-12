@@ -147,7 +147,7 @@ export function Segmented<T extends string>({
           className={cn(
             "rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200",
             value === o.value
-              ? "bg-paper text-ink shadow-soft"
+              ? "bg-accent text-accent-fg shadow-soft"
               : "text-paper/55 hover:text-paper",
           )}
         >
@@ -169,7 +169,7 @@ export function Chip({
       className={cn(
         "rounded-full border px-3 py-1 text-xs font-medium transition-all duration-200",
         active
-          ? "border-paper/30 bg-paper/10 text-paper"
+          ? "border-accent/40 bg-accent/15 text-paper"
           : "border-paper/10 bg-transparent text-paper/55 hover:border-paper/20 hover:text-paper",
         className,
       )}

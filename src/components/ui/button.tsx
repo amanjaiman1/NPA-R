@@ -8,14 +8,14 @@ type Size = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-paper text-ink hover:opacity-88 shadow-soft hover:-translate-y-px",
+    "bg-accent text-accent-fg hover:opacity-90 shadow-soft hover:-translate-y-px",
   ghost:
     "bg-paper/[0.04] text-paper hover:bg-paper/[0.09] border border-paper/10 hover:border-paper/20",
   outline:
     "bg-transparent text-paper border border-paper/15 hover:bg-paper/[0.05] hover:border-paper/25",
   subtle: "bg-transparent text-paper/60 hover:text-paper hover:bg-paper/[0.05]",
   danger:
-    "bg-transparent text-paper/70 hover:text-paper border border-paper/10 hover:border-paper/30 hover:bg-paper/[0.05]",
+    "bg-transparent text-danger hover:text-danger border border-danger/25 hover:border-danger/45 hover:bg-danger/10",
 };
 
 const sizes: Record<Size, string> = {
@@ -38,7 +38,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className={cn(
         "inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-snugg",
         "transition-all duration-200 ease-out",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper/30",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40",
         "disabled:pointer-events-none disabled:opacity-40 select-none",
         variants[variant],
         sizes[size],

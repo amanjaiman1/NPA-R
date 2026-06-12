@@ -7,10 +7,10 @@ import { cn } from "@/lib/utils";
 
 const LEVEL_BG = [
   "bg-paper/[0.05]",
-  "bg-paper/20",
-  "bg-paper/40",
-  "bg-paper/65",
-  "bg-paper/90",
+  "bg-accent/25",
+  "bg-accent/45",
+  "bg-accent/65",
+  "bg-accent/90",
 ];
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -114,7 +114,7 @@ export function Heatmap({
                       }}
                       onMouseLeave={() => setHover(null)}
                       className={cn(
-                        "rounded-[3px] transition-colors duration-150 hover:ring-1 hover:ring-paper/40",
+                        "rounded-[3px] transition-colors duration-150 hover:ring-1 hover:ring-accent/50",
                         LEVEL_BG[cell.level],
                       )}
                       style={{ width: cellSize, height: cellSize }}

@@ -21,7 +21,7 @@ export function Label({
 }
 
 const fieldBase =
-  "w-full rounded-xl border border-paper/12 bg-paper/[0.03] px-3.5 py-2.5 text-sm text-paper placeholder:text-paper/30 transition-colors focus:border-paper/30 focus:outline-none focus:ring-1 focus:ring-paper/20";
+  "w-full rounded-xl border border-paper/12 bg-paper/[0.03] px-3.5 py-2.5 text-sm text-paper placeholder:text-paper/30 transition-colors focus:border-accent/50 focus:outline-none focus:ring-1 focus:ring-accent/30";
 
 export const Input = React.forwardRef<
   HTMLInputElement,
@@ -108,7 +108,7 @@ export function RatingPicker({
             className={cn(
               "h-8 flex-1 rounded-lg border text-xs font-medium transition-all",
               v <= value
-                ? "border-paper/30 bg-paper text-ink"
+                ? "border-accent bg-accent text-accent-fg"
                 : "border-paper/12 bg-paper/[0.03] text-paper/40 hover:border-paper/25",
             )}
           >

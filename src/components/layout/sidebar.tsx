@@ -112,17 +112,17 @@ export function Sidebar({
                         "group relative flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-all duration-200",
                         collapsed && "justify-center px-0",
                         active
-                          ? "bg-paper/[0.08] text-paper"
+                          ? "bg-accent/[0.12] text-paper"
                           : "text-paper/55 hover:bg-paper/[0.04] hover:text-paper",
                       )}
                     >
                       {active && (
-                        <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-paper" />
+                        <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-accent" />
                       )}
                       <Icon
                         className={cn(
                           "h-[1.05rem] w-[1.05rem] shrink-0 transition-transform duration-200",
-                          active ? "text-paper" : "text-paper/45 group-hover:text-paper/80",
+                          active ? "text-accent" : "text-paper/45 group-hover:text-paper/80",
                         )}
                       />
                       {!collapsed && (
@@ -145,7 +145,7 @@ export function Sidebar({
             collapsed && "justify-center px-0",
           )}
         >
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-paper text-ink">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-accent to-info text-accent-fg">
             <span className="text-xs font-semibold">{initials}</span>
           </div>
           {!collapsed && (

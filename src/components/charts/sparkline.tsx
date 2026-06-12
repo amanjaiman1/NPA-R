@@ -35,15 +35,15 @@ export function Sparkline({
     >
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgb(var(--paper))" stopOpacity="0.2" />
-          <stop offset="100%" stopColor="rgb(var(--paper))" stopOpacity="0" />
+          <stop offset="0%" stopColor="rgb(var(--accent))" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="rgb(var(--accent))" stopOpacity="0" />
         </linearGradient>
       </defs>
       {fill && <path d={area} fill={`url(#${gid})`} />}
       <path
         d={line}
         fill="none"
-        className="stroke-paper"
+        className="stroke-accent"
         strokeWidth={1.5}
         strokeLinejoin="round"
         strokeLinecap="round"

@@ -14,6 +14,13 @@ const config: Config = {
         // from these via opacity, so the palette is theme-agnostic.
         ink: "rgb(var(--ink) / <alpha-value>)",
         paper: "rgb(var(--paper) / <alpha-value>)",
+        // A calm accent + muted semantic palette layered on top.
+        accent: "rgb(var(--accent) / <alpha-value>)",
+        "accent-fg": "rgb(var(--accent-fg) / <alpha-value>)",
+        positive: "rgb(var(--positive) / <alpha-value>)",
+        warning: "rgb(var(--warning) / <alpha-value>)",
+        danger: "rgb(var(--danger) / <alpha-value>)",
+        info: "rgb(var(--info) / <alpha-value>)",
         // Legacy aliases kept for safety
         background: "rgb(var(--ink) / <alpha-value>)",
         foreground: "rgb(var(--paper) / <alpha-value>)",
@@ -41,6 +48,10 @@ const config: Config = {
         grid: "linear-gradient(rgb(var(--paper)/0.04) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--paper)/0.04) 1px, transparent 1px)",
         "radial-fade":
           "radial-gradient(ellipse 80% 60% at 50% -10%, rgb(var(--paper)/0.08), transparent 70%)",
+        "radial-accent":
+          "radial-gradient(ellipse 70% 55% at 50% -8%, rgb(var(--accent)/0.16), transparent 72%)",
+        "radial-accent-2":
+          "radial-gradient(ellipse 50% 50% at 100% 0%, rgb(var(--info)/0.10), transparent 60%)",
         shine:
           "linear-gradient(110deg, transparent 35%, rgb(var(--paper)/0.12) 50%, transparent 65%)",
       },

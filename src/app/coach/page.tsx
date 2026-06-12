@@ -85,11 +85,11 @@ const KIND_ICONS: Record<ScheduleBlock["kind"], LucideIcon> = {
 
 const SEV: Record<
   RiskSeverity,
-  { bar: string; badge: "solid" | "outline" | "ghost"; label: string }
+  { bar: string; badge: "danger" | "warning" | "accent"; label: string }
 > = {
-  critical: { bar: "bg-paper", badge: "solid", label: "Critical" },
-  elevated: { bar: "bg-paper/45", badge: "outline", label: "Elevated" },
-  watch: { bar: "bg-paper/20", badge: "ghost", label: "Watch" },
+  critical: { bar: "bg-danger", badge: "danger", label: "Critical" },
+  elevated: { bar: "bg-warning", badge: "warning", label: "Elevated" },
+  watch: { bar: "bg-info/70", badge: "accent", label: "Watch" },
 };
 
 type Tab = "briefing" | "plan" | "reports" | "talk";
@@ -123,7 +123,7 @@ export default function CoachPage() {
       <Card className="overflow-hidden">
         <div className="flex flex-col gap-5 p-6 sm:flex-row sm:items-start">
           <div className="flex items-center gap-3 sm:flex-col sm:items-start">
-            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-paper text-ink">
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-accent text-accent-fg shadow-soft">
               <Sparkles className="h-5 w-5" />
             </span>
             <div className="sm:mt-1">
@@ -646,7 +646,7 @@ function TalkView({
         >
           {messages.length === 0 && (
             <div className="flex h-full flex-col items-center justify-center text-center">
-              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-paper text-ink">
+              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-accent text-accent-fg shadow-soft">
                 <Sparkles className="h-5 w-5" />
               </span>
               <p className="mt-4 text-sm font-medium text-paper">
@@ -667,7 +667,7 @@ function TalkView({
               )}
             >
               {m.role === "coach" && (
-                <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-paper text-ink">
+                <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-accent text-accent-fg">
                   <Sparkles className="h-3.5 w-3.5" />
                 </span>
               )}
@@ -685,7 +685,7 @@ function TalkView({
           ))}
           {typing && (
             <div className="flex gap-3">
-              <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-paper text-ink">
+              <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-accent text-accent-fg">
                 <Sparkles className="h-3.5 w-3.5" />
               </span>
               <div className="flex items-center gap-1 rounded-2xl border border-paper/10 bg-paper/[0.03] px-4 py-3">

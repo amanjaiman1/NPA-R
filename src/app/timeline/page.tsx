@@ -272,9 +272,9 @@ function LegacyHero({
     { label: "Current stage", value: stats.currentStage.split(" · ")[0], hint: stats.currentStage.split(" · ")[1] ?? "" },
   ];
   return (
-    <div className="overflow-hidden rounded-2xl border border-paper/[0.08] bg-gradient-to-br from-paper/[0.05] to-transparent">
+    <div className="overflow-hidden rounded-2xl border border-paper/[0.08] bg-gradient-to-br from-accent/[0.08] via-paper/[0.02] to-transparent">
       <div className="flex items-start gap-3 p-6 sm:p-7">
-        <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-paper text-ink">
+        <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent text-accent-fg shadow-soft">
           <Sparkles className="h-4 w-4" />
         </span>
         <div>
@@ -372,7 +372,7 @@ function EventRow({
           event.future
             ? "border-dashed border-paper/25 bg-ink text-paper/40"
             : defining
-              ? "border-transparent bg-paper text-ink shadow-soft"
+              ? "border-transparent bg-accent text-accent-fg shadow-soft"
               : strong
                 ? "border-paper/20 bg-paper/[0.08] text-paper"
                 : "border-paper/12 bg-paper/[0.04] text-paper/60",
@@ -422,7 +422,7 @@ function EventRow({
           <span
             className={cn(
               "uppercase tracking-wider",
-              event.source === "manual" ? "text-paper/55" : "text-paper/35",
+              event.source === "manual" ? "text-accent/90" : "text-paper/35",
             )}
           >
             {SOURCE_LABEL[event.source]}

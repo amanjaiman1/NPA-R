@@ -55,7 +55,7 @@ export function BarChart({
               <div
                 className={cn(
                   "w-full rounded-t-[4px] transition-all duration-300",
-                  isLast ? "bg-paper" : "bg-paper/25 group-hover:bg-paper/45",
+                  isLast ? "bg-accent" : "bg-paper/25 group-hover:bg-paper/45",
                   hover === i && !isLast && "bg-paper/55",
                 )}
                 style={{ height: `${Math.max(pct, 1.5)}%` }}

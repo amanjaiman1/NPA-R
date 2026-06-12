@@ -29,11 +29,11 @@ export function Logo({ className }: { className?: string }) {
         y1="3.5"
         x2="16"
         y2="9"
-        className="stroke-paper/40"
+        className="stroke-accent/50"
         strokeWidth="1.5"
         strokeLinecap="round"
       />
-      <circle cx="16" cy="3.5" r="2.4" className="fill-paper" />
+      <circle cx="16" cy="3.5" r="2.4" className="fill-accent" />
     </svg>
   );
 }

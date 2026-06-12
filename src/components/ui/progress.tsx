@@ -22,7 +22,7 @@ export function Progress({
     >
       <div
         className={cn(
-          "h-full rounded-full bg-paper transition-all duration-700 ease-out",
+          "h-full rounded-full bg-accent transition-all duration-700 ease-out",
           barClassName,
         )}
         style={{ width: `${v}%` }}
@@ -74,7 +74,7 @@ export function RadialProgress({
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={offset}
-          className="stroke-paper transition-[stroke-dashoffset] duration-1000 ease-out"
+          className="stroke-accent transition-[stroke-dashoffset] duration-1000 ease-out"
         />
       </svg>
       {(label || sublabel) && (

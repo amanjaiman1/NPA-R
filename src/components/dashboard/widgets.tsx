@@ -75,7 +75,7 @@ export function GreetingHero() {
 
   return (
     <Card className="relative overflow-hidden">
-      <div className="absolute -right-10 -top-16 h-56 w-56 rounded-full bg-paper/[0.04] blur-2xl" />
+      <div className="absolute -right-10 -top-16 h-56 w-56 rounded-full bg-accent/[0.08] blur-2xl" />
       <div className="relative flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <div className="min-w-0">
           <p className="eyebrow mb-3">
@@ -96,7 +96,7 @@ export function GreetingHero() {
           <div className="mt-5 flex flex-wrap items-center gap-2">
             <Link
               href="/journal?new=1"
-              className="inline-flex items-center gap-2 rounded-full bg-paper px-4 py-2 text-sm font-medium text-ink transition-all hover:-translate-y-px hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-medium text-accent-fg shadow-soft transition-all hover:-translate-y-px hover:opacity-90"
             >
               Log today
               <ArrowUpRight className="h-4 w-4" />
@@ -259,7 +259,7 @@ export function TodayCard() {
         </p>
         <Link
           href="/journal?new=1"
-          className="mt-4 inline-flex items-center gap-2 rounded-full bg-paper px-4 py-2 text-sm font-medium text-ink hover:opacity-90"
+          className="mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-medium text-accent-fg shadow-soft hover:opacity-90"
         >
           Start today’s entry
         </Link>
@@ -517,9 +517,9 @@ export function CoachNudge() {
 
   return (
     <Card className="relative overflow-hidden p-6">
-      <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-paper/[0.05] blur-2xl" />
+      <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-accent/[0.07] blur-2xl" />
       <div className="relative flex items-start gap-3">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-paper text-ink">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent text-accent-fg shadow-soft">
           <Sparkles className="h-4 w-4" />
         </span>
         <div className="min-w-0">

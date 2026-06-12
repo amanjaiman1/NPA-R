@@ -48,7 +48,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="relative flex h-[100dvh] overflow-hidden">
       {/* ambient background */}
       <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-radial-fade opacity-70" />
+        <div className="absolute inset-0 bg-radial-accent opacity-90" />
+        <div className="absolute inset-0 bg-radial-accent-2 opacity-80" />
+        <div className="absolute inset-0 bg-radial-fade opacity-40" />
         <div className="absolute inset-0 bg-grid bg-grid opacity-[0.5] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,black,transparent)]" />
       </div>
 

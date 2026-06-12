@@ -69,8 +69,8 @@ export function LineChart({
       <svg width={w} height={h} className="overflow-visible">
         <defs>
           <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgb(var(--paper))" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="rgb(var(--paper))" stopOpacity="0" />
+            <stop offset="0%" stopColor="rgb(var(--accent))" stopOpacity="0.20" />
+            <stop offset="100%" stopColor="rgb(var(--accent))" stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -114,7 +114,7 @@ export function LineChart({
           <path
             d={linePath}
             fill="none"
-            className="stroke-paper"
+            className="stroke-accent"
             strokeWidth={2}
             strokeLinejoin="round"
             strokeLinecap="round"
@@ -128,7 +128,7 @@ export function LineChart({
                 cx={p.x}
                 cy={p.y}
                 r={hover === i ? 4 : 2.5}
-                className={cn("fill-ink stroke-paper transition-all", hover === i && "fill-paper")}
+                className={cn("fill-ink stroke-accent transition-all", hover === i && "fill-accent")}
                 strokeWidth={1.5}
               />
               {/* hover hit area */}

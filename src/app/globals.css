@@ -10,16 +10,29 @@
 
 :root,
 [data-theme="dark"] {
-  --ink: 8 8 10; /* page background — near black */
-  --paper: 236 237 240; /* foreground — near white */
-  --selection: 255 255 255;
+  --ink: 14 15 19; /* page background — softly tinted charcoal, easier on eyes than pure black */
+  --paper: 230 232 237; /* foreground — gentle off-white to cut glare */
+  /* A calm, desaturated palette. Indigo leads; semantics stay muted. */
+  --accent: 132 142 236; /* periwinkle indigo */
+  --accent-fg: 12 13 18; /* readable text on the (light-ish) accent */
+  --positive: 122 186 142; /* sage */
+  --warning: 222 176 104; /* warm amber */
+  --danger: 224 130 116; /* soft clay */
+  --info: 124 170 226; /* quiet sky */
+  --selection: 132 142 236;
   color-scheme: dark;
 }
 
 [data-theme="light"] {
-  --ink: 250 250 249; /* page background — bone white */
-  --paper: 18 18 20; /* foreground — near black */
-  --selection: 0 0 0;
+  --ink: 250 250 248; /* page background — warm bone white */
+  --paper: 24 24 28; /* foreground — near black */
+  --accent: 82 90 210; /* deeper indigo for contrast on light */
+  --accent-fg: 248 249 255;
+  --positive: 46 122 80;
+  --warning: 166 118 34;
+  --danger: 190 74 60;
+  --info: 48 104 178;
+  --selection: 82 90 210;
   color-scheme: light;
 }
 
@@ -113,8 +126,8 @@ body {
     user-select: none;
   }
   .btn-primary {
-    background: rgb(var(--paper));
-    color: rgb(var(--ink));
+    background: rgb(var(--accent));
+    color: rgb(var(--accent-fg));
   }
   .btn-primary:hover {
     opacity: 0.88;

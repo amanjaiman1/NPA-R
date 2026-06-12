@@ -65,7 +65,7 @@ export function Donut({
               cy={size / 2}
               r={r}
               fill="none"
-              stroke="rgb(var(--paper))"
+              stroke="rgb(var(--accent))"
               strokeOpacity={a.opacity}
               strokeWidth={thickness}
               strokeDasharray={a.dasharray}
@@ -96,7 +96,7 @@ export function Donut({
         {arcs.slice(0, 6).map((a, i) => (
           <li key={i} className="flex items-center gap-2 text-xs">
             <span
-              className="h-2.5 w-2.5 shrink-0 rounded-sm bg-paper"
+              className="h-2.5 w-2.5 shrink-0 rounded-sm bg-accent"
               style={{ opacity: a.opacity }}
             />
             <span className="min-w-0 flex-1 truncate text-paper/70">
