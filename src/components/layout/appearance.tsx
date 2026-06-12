@@ -5,6 +5,7 @@ import { useChronicle } from "@/lib/store";
 import { Modal } from "@/components/ui/modal";
 import { SURFACES, PALETTES } from "@/lib/theme";
 import { cn } from "@/lib/utils";
+import { DataBackup } from "./data-backup";
 
 export function AppearanceModal({
   open,
@@ -22,8 +23,8 @@ export function AppearanceModal({
     <Modal
       open={open}
       onClose={onClose}
-      title="Appearance"
-      description="Make the Chronicle yours — pick a background and a colour story."
+      title="Settings"
+      description="Personalise the Chronicle, and keep a safe copy of your data."
       className="sm:max-w-lg"
     >
       <div className="space-y-7">
@@ -104,6 +105,11 @@ export function AppearanceModal({
               );
             })}
           </div>
+        </section>
+
+        {/* Backup & data */}
+        <section className="border-t border-paper/[0.08] pt-6">
+          <DataBackup />
         </section>
       </div>
     </Modal>

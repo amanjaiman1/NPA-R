@@ -76,7 +76,7 @@ export function GreetingHero() {
   return (
     <Card className="relative overflow-hidden">
       <div className="absolute -right-10 -top-16 h-56 w-56 rounded-full bg-accent/[0.08] blur-2xl" />
-      <div className="relative flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+      <div className="relative flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-8">
         <div className="min-w-0">
           <p className="eyebrow mb-3">
             Day {journeyDay} of the journey · {profile.targetExam}
@@ -108,7 +108,7 @@ export function GreetingHero() {
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-5">
+        <div className="flex shrink-0 items-center justify-center gap-5">
           <RadialProgress
             value={Math.max(0, Math.min(100, ((560 - daysLeft) / 560) * 100))}
             size={120}
@@ -143,14 +143,14 @@ function StatCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
-      <Card hover className="h-full p-5">
+      <Card hover className="h-full p-4 sm:p-5">
         <div className="flex items-center gap-2 text-paper/40">
           <Icon className="h-4 w-4" />
           <span className="text-[0.7rem] font-medium uppercase tracking-wider">
             {label}
           </span>
         </div>
-        <p className="tabular mt-3 text-3xl font-semibold tracking-tight text-paper">
+        <p className="tabular mt-3 text-2xl font-semibold tracking-tight text-paper sm:text-3xl">
           {value}
         </p>
         {hint && <p className="mt-1 text-xs text-paper/40">{hint}</p>}
@@ -186,7 +186,7 @@ export function HeatmapCard() {
   const activeDays = cells.filter((c) => c.hours > 0).length;
 
   return (
-    <Card className="p-6">
+    <Card className="p-5 sm:p-6">
       <div className="mb-5 flex items-end justify-between">
         <div>
           <p className="eyebrow mb-1">Consistency</p>
@@ -227,7 +227,7 @@ export function TrendCard() {
   }));
 
   return (
-    <Card className="p-6">
+    <Card className="p-5 sm:p-6">
       <div className="mb-5 flex items-end justify-between">
         <div>
           <p className="eyebrow mb-1">Last 14 days</p>
@@ -249,7 +249,7 @@ export function TodayCard() {
 
   if (!entry) {
     return (
-      <Card className="flex h-full flex-col items-center justify-center p-8 text-center">
+      <Card className="flex h-full flex-col items-center justify-center p-6 text-center sm:p-8">
         <div className="mb-3 grid h-12 w-12 place-items-center rounded-full bg-paper/[0.06] text-paper/50">
           <Clock className="h-5 w-5" />
         </div>
@@ -270,7 +270,7 @@ export function TodayCard() {
   const name = (id: string) => subjects.find((s) => s.id === id)?.name ?? id;
 
   return (
-    <Card className="p-6">
+    <Card className="p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="eyebrow mb-1">Today</p>
@@ -319,7 +319,7 @@ export function FocusDonut() {
   const total = Math.round(data.reduce((a, s) => a + s.value, 0));
 
   return (
-    <Card className="p-6">
+    <Card className="p-5 sm:p-6">
       <div className="mb-5">
         <p className="eyebrow mb-1">Last 30 days</p>
         <h3 className="text-base font-semibold text-paper">Where the hours went</h3>
@@ -348,7 +348,7 @@ export function RevisionDueCard() {
   const name = (id: string) => subjects.find((s) => s.id === id)?.name ?? id;
 
   return (
-    <Card className="p-6">
+    <Card className="p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Repeat className="h-4 w-4 text-paper/45" />
@@ -393,7 +393,7 @@ export function MockMomentumCard() {
   const delta = latest && prev ? latest.pct - prev.pct : 0;
 
   return (
-    <Card className="p-6">
+    <Card className="p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-4 w-4 text-paper/45" />
@@ -433,7 +433,7 @@ export function GoalsCard() {
     .slice(0, 4);
 
   return (
-    <Card className="p-6">
+    <Card className="p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Target className="h-4 w-4 text-paper/45" />
@@ -474,7 +474,7 @@ export function MilestonesMini() {
     .slice(0, 3);
 
   return (
-    <Card className="p-6">
+    <Card className="p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <MilestoneIcon className="h-4 w-4 text-paper/45" />
@@ -516,7 +516,7 @@ export function CoachNudge() {
       : "Log a few days to unlock personalised coaching insights.";
 
   return (
-    <Card className="relative overflow-hidden p-6">
+    <Card className="relative overflow-hidden p-5 sm:p-6">
       <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-accent/[0.07] blur-2xl" />
       <div className="relative flex items-start gap-3">
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent text-accent-fg shadow-soft">

@@ -55,7 +55,7 @@ export function Donut({
   }, [segments, c, total]);
 
   return (
-    <div className={cn("flex items-center gap-5", className)}>
+    <div className={cn("flex items-center gap-4 sm:gap-5", className)}>
       <div className="relative shrink-0" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="-rotate-90">
           <circle

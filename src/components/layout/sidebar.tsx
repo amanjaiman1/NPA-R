@@ -162,8 +162,8 @@ export function Sidebar({
             <button
               onClick={onOpenAppearance}
               className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-paper/45 transition-colors hover:bg-paper/[0.06] hover:text-paper"
-              aria-label="Appearance settings"
-              title="Appearance"
+              aria-label="Settings"
+              title="Settings"
             >
               <Palette className="h-4 w-4" />
             </button>

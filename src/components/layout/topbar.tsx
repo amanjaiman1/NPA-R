@@ -74,7 +74,7 @@ export function Topbar({
       <button
         onClick={onOpenAppearance}
         className="grid h-9 w-9 place-items-center rounded-lg text-paper/60 transition-colors hover:bg-paper/[0.06] hover:text-paper lg:hidden"
-        aria-label="Appearance settings"
+        aria-label="Settings"
       >
         <Palette className="h-5 w-5" />
       </button>
